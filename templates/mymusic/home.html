@@ -1,0 +1,91 @@
+{% extends 'mymusic/base.html' %}
+
+{% block title %}Главная - Справочник меломана{% endblock %}
+
+{% block content %}
+<div class="row mb-5">
+    <div class="col-12 text-center">
+        <h1 class="display-4 mb-3">Добро пожаловать в "Справочник меломана"!</h1>
+        <p class="lead mb-4">Автоматизированная информационно-справочная система для любителей музыки.<br>Открывайте для себя исполнителей, альбомы, новости и делитесь отзывами!</p>
+        <div class="d-flex justify-content-center gap-3 mb-3">
+            <a href="{% url 'artist_list' %}" class="btn btn-lg btn-outline-primary"><i class="bi bi-person-music"></i> Исполнители</a>
+            <a href="{% url 'album_list' %}" class="btn btn-lg btn-outline-success"><i class="bi bi-vinyl"></i> Альбомы</a>
+            <a href="{% url 'news_list' %}" class="btn btn-lg btn-outline-warning"><i class="bi bi-newspaper"></i> Новости</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <h2 class="mb-4 border-bottom pb-2">Последние альбомы</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for album in latest_albums %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    {% if album.cover %}
+                        <img src="{{ album.cover.url }}" class="card-img-top" alt="{{ album.title }}">
+                    {% else %}
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <i class="bi bi-music-note-beamed fs-1 text-muted"></i>
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ album.title }}</h5>
+                        {% if album.artist %}
+                            <p class="card-text">{{ album.artist.name }}</p>
+                        {% endif %}
+                        <a href="{% url 'album_detail' album.pk %}" class="btn btn-primary btn-sm">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">Альбомы пока не добавлены.</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h3 class="h5 mb-0">Популярные исполнители</h3>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    {% for artist in top_artists %}
+                    <li class="mb-2">
+                        {% if artist.slug %}
+                            <a href="{% url 'artist_detail' artist.slug %}" class="text-decoration-none">
+                                <i class="bi bi-person-music"></i> {{ artist.name }}
+                            </a>
+                        {% else %}
+                            <h5 class="card-title text-dark">{{ artist.name }}</h5>
+                        {% endif %}
+                    </li>
+                    {% empty %}
+                    <li>Нет данных.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-warning">
+                <h3 class="h5 mb-0">Последние новости</h3>
+            </div>
+            <div class="card-body">
+                {% for news in latest_news %}
+                <div class="mb-3 border-bottom pb-2">
+                    <h4 class="h6">{{ news.title }}</h4>
+                    <p class="small text-muted">{{ news.created_at|date:"d.m.Y" }}</p>
+                    <a href="{% url 'news_detail' news.pk %}" class="btn btn-sm btn-outline-primary">Читать</a>
+                </div>
+                {% empty %}
+                <div class="alert alert-info">Новостей пока нет.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

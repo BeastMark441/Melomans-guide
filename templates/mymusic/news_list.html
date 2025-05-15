@@ -1,0 +1,33 @@
+{% extends 'mymusic/base.html' %}
+
+{% block title %}Новости - Справочник меломана{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Новости</h1>
+
+<div class="row">
+    {% for news_item in news %}
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            {% if news_item.image %}
+            <img src="{{ news_item.image.url }}" class="card-img-top" alt="{{ news_item.title }}">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ news_item.title }}</h5>
+                <p class="card-text">{{ news_item.content|truncatewords:30 }}</p>
+                <p class="text-muted">
+                    <small>{{ news_item.created_at|date:"d.m.Y H:i" }}</small>
+                </p>
+                <a href="{% url 'news_detail' news_item.pk %}" class="btn btn-primary">Читать далее</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">
+            Новости пока не добавлены.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %} 

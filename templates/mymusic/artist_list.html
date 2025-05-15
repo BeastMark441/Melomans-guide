@@ -1,0 +1,38 @@
+{% extends 'mymusic/base.html' %}
+
+{% block title %}Исполнители - Справочник меломана{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Исполнители</h1>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for artist in artists %}
+    <div class="col">
+        <div class="card h-100">
+            {% if artist.image %}
+                <img src="{{ artist.image.url }}" class="card-img-top" alt="{{ artist.name }}">
+            {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="bi bi-person-music fs-1 text-muted"></i>
+                </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ artist.name }}</h5>
+                <p class="card-text">{{ artist.bio|truncatewords:30 }}</p>
+                {% if artist.slug %}
+                    <a href="{% url 'artist_detail' artist.slug %}" class="btn btn-primary">Подробнее</a>
+                {% else %}
+                    <button class="btn btn-secondary" disabled>Подробнее</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">
+            Исполнители пока не добавлены.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %} 

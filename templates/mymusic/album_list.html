@@ -1,0 +1,37 @@
+{% extends 'mymusic/base.html' %}
+
+{% block title %}Альбомы - Справочник меломана{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Альбомы</h1>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for album in albums %}
+    <div class="col">
+        <div class="card h-100">
+            {% if album.cover %}
+                <img src="{{ album.cover.url }}" class="card-img-top" alt="{{ album.title }}">
+            {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="bi bi-vinyl fs-1 text-muted"></i>
+                </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ album.title }}</h5>
+                <p class="card-text">
+                    <strong>Исполнитель:</strong> {{ album.artist.name }}<br>
+                    <strong>Дата выпуска:</strong> {{ album.release_date|date:"d.m.Y" }}
+                </p>
+                <a href="{% url 'album_detail' album.pk %}" class="btn btn-primary">Подробнее</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">
+            Альбомы пока не добавлены.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %} 
